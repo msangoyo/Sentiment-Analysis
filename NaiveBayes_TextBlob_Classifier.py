@@ -15,7 +15,7 @@ Train_Set_NEG  = []
 count_neg = 0
 Training_Set = []
 ID_val_List  = []
-for line in open("hotelNegT-train.txt",'r',encoding="utf8").readlines():
+for line in open("busNegT-train.txt",'r',encoding="utf8").readlines():
     if re.match(r'ID-[0-9].*',line):
         count_neg+=1
         each_line = re.sub(r'ID-[0-9].*_','',line)
@@ -28,7 +28,7 @@ for each_sentence in Train_Set_NEG:
 
 Train_Set_POS  = []
 count_pos = 0
-for line in open("hotelPosT-train.txt",'r',encoding="utf8").readlines():
+for line in open("busPosT-train.txt",'r',encoding="utf8").readlines():
     if re.match(r'ID-[0-9].*',line):
         count_pos+=1
         each_line = re.sub(r'ID-[0-9].*_','',line)
@@ -55,6 +55,6 @@ for each_item in Test_Set:
 dictionary = OrderedDict()
 dictionary = dict(zip(ID_val_List, sol_list))
 
-with open("Upadhyaya-Swathi-assgn3-out_builtin_Func.txt",'w') as ofile:
+with open("nbtest.txt",'w') as ofile:
         for key,val in dictionary.items():
             ofile.write((str(key) + '\t' + str(val) + '\n'))

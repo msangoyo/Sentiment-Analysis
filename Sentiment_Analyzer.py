@@ -21,11 +21,10 @@ Positive_Word_Dict = defaultdict()
 Sentence_Sentiment = {}
 Evaluation_Dict = OrderedDict()
 
-frequent_word_list = ['ourselves', 'hers', 'between', 'yourself', 'but', 'again', 'there', 'about', 'once', 'during', 'out', 'very', 'having', 'with', 'they', 'own', 'an', 'be', 'some', 'for', 'do', 'its', 'yours', 'such', 'into', 'of', 'most', 'itself', 'other', 'off', 'is', 's', 'am', 'or', 'who', 'as', 'from', 'him', 'each', 'the', 'themselves', 'until', 'below', 'are', 'we', 'these', 'your', 'his', 'through', 'don', 'nor', 'me', 'were', 'her', 'more', 'himself', 'this', 'down', 'should', 'our', 'their', 'while', 'above', 'both', 'up', 'to', 'ours', 'had', 'she', 'all', 'no', 'when', 'at', 'any', 'before', 'them', 'same', 'and', 'been', 'have', 'in', 'will', 'on', 'does', 'yourselves', 'then', 'that', 'because', 'what', 'over', 'why', 'so', 'can', 'did', 'not', 'now', 'under', 'he', 'you', 'herself', 'has', 'just', 'where', 'too', 'only', 'myself', 'which', 'those', 'i', 'after', 'few', 'whom', 't', 'being', 'if', 'theirs', 'my', 'against', 'a', 'by', 'doing', 'it', 'how', 'further', 'was', 'here', 'than']
+frequent_word_list = ['gamit', 'ako', 'sa', 'ha','lagi', 'ang', 'iyong','ginamit','yun', 'ito', 'bakit', 'ganon','ganoon','ito','mga']
 ID_Val = []
-#Basic data cleaning using regular expressions. I have removed the frequently repeated words
-#as described in the above list. I have eliminated all kind of punctuation marks - like .,!,-, etc
-for line in open("hotelNegT-train.txt",encoding="utf8").readlines():
+
+for line in open("busNegT-train.txt",encoding="utf8").readlines():
     if line.strip():
         word_split = line.replace(',',' ').replace('.',' ').replace('!',' ').replace('--',' ').split()
         for each_word in word_split:
@@ -64,9 +63,8 @@ Negative_Word_Dict =  Counter(list_negative_word)
 Denominator_Sum_Neg = sum(Negative_Word_Dict.values())
 Unique_list_negative_word = set(list_negative_word)
 Unique_List_Size_Negative = len(Unique_list_negative_word)
-print (ID_Val)
 list_positive_word = []
-for line in open("hotelPosT-train.txt",encoding="utf8").readlines():
+for line in open("busPosT-train.txt",encoding="utf8").readlines():
     if line.strip():
         word_split = line.split()
         word_split = line.replace(',',' ').replace('.',' ').replace('!',' ').replace('--',' ').split()
@@ -133,8 +131,8 @@ print ("Log_Prior_Negative - ",Log_Prior_Negative)
 Negative_Word_Dict_final = defaultdict()
 Positive_Word_Dict_final = defaultdict()
 
-print (Denominator_Sum_Pos)
-print (Denominator_Sum_Neg)
+print ("Denominator_Sum_Pos",Denominator_Sum_Pos)
+print ("Denominator_Sum_Neg",Denominator_Sum_Neg)
 #Creating maximum likelihood estimate values for each word in positive training set
 for key in Positive_Word_Dict:    
     val = np.log10 (float(Positive_Word_Dict[key] + 1)/float(Denominator_Sum_Pos + Unique_List_Size_Positive))
@@ -143,8 +141,8 @@ for key in Negative_Word_Dict:
     val =  np.log10(float(Negative_Word_Dict[key] + 1)/float(Denominator_Sum_Neg + Unique_List_Size_Negative))
     Negative_Word_Dict_final.update({key:val})
 
-Negative_Probability_Sentence = 0.00
-Positive_Probability_Sentence = 0.00
+Negative_Probability_Sentence = 100.00
+Positive_Probability_Sentence = 100.00
 Sentence_Token_List = []
 Sentence_List = []
 
@@ -217,82 +215,19 @@ for each_key,each_value in Test_Review_Dict.items():
     key = [k for k,v in temp_dict.items() if v==max(temp_dict.values())][0] 
     Test_Review_Class.update ({ID_Value:key})
     temp_dict.clear()
-    Positive_Probability_Sentence = 0.0
-    Negative_Probability_Sentence = 0.0
+    Positive_Probability_Sentence = 100.0
+    Negative_Probability_Sentence = 100.0
+
     
-with open("Upadhyaya-Swathi-assgn3-out_BasicNaiveBayes.txt",'w') as ofile:
-        for keys,values in Test_Review_Class.items():
+with open("TestResult.txt",'w') as ofile:
+    
+    Positive_Probability_Sentence+=Log_Prior_Positive
+    Negative_Probability_Sentence+=Log_Prior_Negative
+    temp_dict.update({'POS': Positive_Probability_Sentence})
+    temp_dict.update({'NEG': Negative_Probability_Sentence})
+       key = [k for k,v in temp_dict.items() if v==max(temp_dict.values())][0] 
+    Test_Review_Class.update ({ID_Value:key})
+    temp_dict.clear()
+    for keys,values in Test_Review_Class.items():
             ofile.write((str(keys) + '\t' + values + '\n'))
-
-####with open("Evaluation.txt",'w') as ofile:
-####        for keys,values in Evaluation_Dict.items():
-####            ofile.write((str(keys) + '\t' + values + '\n'))
-##wrong_ans = 0
-##for line in open('Evaluation.txt','r').readlines():
-##	if line.strip():
-##	    word_split = line.split()
-##	    Evaluation_Dict.update({word_split[0] : word_split[1]})
-##			
-##for key in Test_Review_Class.keys():
-##    if key in Evaluation_Dict.keys():
-##        count+=1
-##        if Evaluation_Dict[key] == Test_Review_Class[key]:
-##            accuracy+=1
-##        else:
-##            #print ("TAG DONT MATCH!")
-##            wrong_ans+=1
-##    else:
-##        print ("Key NOT Found!")
-##print (float(accuracy)/float(count))
-##print ("Wrong Answers - ",wrong_ans)
-
-def NaiveBayes_BuiltIn_Package():
-    Train_Set_NEG  = []
-    count_neg = 0
-    Training_Set = []
-    ID_val_List  = []
-    for line in open("hotelNegT-train.txt",'r',encoding="utf8").readlines():
-        if re.match(r'ID-[0-9].*',line):
-            count_neg+=1
-            each_line = re.sub(r'ID-[0-9].*_','',line)
-            each_line = each_line.strip("\n")
-            Train_Set_NEG.append(each_line[8:])
-
-    for each_sentence in Train_Set_NEG:
-        Training_Set.append((each_sentence,'NEG'))
-        
-
-    Train_Set_POS  = []
-    count_pos = 0
-    for line in open("hotelPosT-train.txt",'r',encoding="utf8").readlines():
-        if re.match(r'ID-[0-9].*',line):
-            count_pos+=1
-            each_line = re.sub(r'ID-[0-9].*_','',line)
-            each_line = each_line.strip()
-            Train_Set_POS.append(each_line[8:])
-
-    for each_sentence in Train_Set_POS:
-        Training_Set.append((each_sentence,'POS'))
-
-    classifier = NaiveBayesClassifier(Training_Set)  
-
-    Test_Set = []
-    for line in open("TestSet.txt",'r',encoding="utf8").readlines():
-        if re.match(r'ID-[0-9].*',line):
-            each_line = re.sub(r'ID-[0-9].*_','',line)
-            each_line = each_line.strip()
-            Test_Set.append(each_line[8:])
-            ID_val_List.append(each_line[0:7])
-
-    sol_list = []
-    for each_item in Test_Set:
-        sol_list.append (classifier.classify(each_item))
-
-    dictionary = OrderedDict()
-    dictionary = dict(zip(ID_val_List, sol_list))
-
-    with open("Output.txt",'w') as ofile:
-            for key,val in dictionary.items():
-                ofile.write((str(key) + '\t' + str(val) + '\n'))
-
-NaiveBayes_BuiltIn_Package()
+            ofile.write((str("ID- Value : {}, Negative : {} , Positive : {}".format(ID_Value, Negative_Probability_Sentence,Positive_Probability_Sentence))))

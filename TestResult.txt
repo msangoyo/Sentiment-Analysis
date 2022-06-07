@@ -1,0 +1,14 @@
+ID-2996	POS
+ID-2966	NEG
+ID-2032	POS
+
+count_positive_ID -  10
+count_negative_ID -  10
+Total_No_of_Docs -  20
+Log_Prior_Positive -  -0.3010299956639812
+Log_Prior_Negative -  -0.3010299956639812
+Denominator_Sum_Pos 713
+Denominator_Sum_Neg 667
+ID- Value : ID-2996, Negative : 91.2322069347995 , Positive : 91.62005751858337
+ID- Value : ID-2966, Negative : 83.9790388708038 , Positive : 83.66256396311493
+ID- Value : ID-2032, Negative : 89.41124802878403 , Positive : 89.49184460236012
